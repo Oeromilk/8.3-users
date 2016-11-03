@@ -5,7 +5,8 @@ var Users = Backbone.Model.extend({
 });
 
 var UsersCollection = Backbone.Model.extend({
-  model: Users
+  model: Users,
+  url: 'https://grabow.herokuapp.com/users'
 });
 
 module.exorts = {
