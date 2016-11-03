@@ -16,31 +16,31 @@ $.ajaxSetup({
 var MessageList = React.createClass({
   getInitialState: function(){
     return {
-      message: ''
+      message: []
     };
   },
   componentWillMount: function(){
     var self = this;
     $.ajax('https://grabow.herokuapp.com/classes/Message').then(displayData);
     function displayData(data){
-      self.setState({message: data});
+      self.setState({message: data.results});
     }
   },
   render: function(){
-    var messages = this.state.message.results;
+    var messages = this.state.message;
     console.log(messages);
-    // var messageList = messages.map(function(data){
-    //   return (
-    //     <tr key={data.get('id')}>
-    //       <th>{data.get('username')}</th>
-    //       <td>{data.get('message')}</td>
-    //     </tr>
-    //   )
-    // })
+    var messageList = messages.map(function(data){
+      return (
+        <tr key={data.objectId}>
+          <th>{data.username}</th>
+          <td>{data.message}</td>
+        </tr>
+      )
+    })
     return (
       <table className="table">
         <tbody>
-
+          {messageList}
         </tbody>
       </table>
     );
