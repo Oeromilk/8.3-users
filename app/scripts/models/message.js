@@ -5,7 +5,8 @@ var Messages = Backbone.Model.extend({
 });
 
 var MessagesCollection = Backbone.Model.extend({
-  model: Messages
+  model: Messages,
+  url: 'https://grabow.herokuapp.com/classes/Message'
 });
 
 module.exorts = {

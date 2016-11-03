@@ -8,7 +8,8 @@ var Header = React.createClass({
           <div className="container-fluid">
             <div className="navbar-header">
               <a className="navbar-brand" href="#">O User</a>
-              <p className="navbar-text navbar-right">Signed in as <a href="#" className="navbar-link">{this.props.username}</a></p>
+              <p className="navbar-text navbar-right">Signed in as <a href="#" className="navbar-link">{localStorage.getItem('username')}</a></p>
+              <p className="navbar-text"><a className="navbar-link" href="#messages/">Messages</a></p>
             </div>
           </div>
         </nav>

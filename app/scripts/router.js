@@ -4,14 +4,22 @@ var Backbone = require('backbone');
 
 var Header = require('./components/layouts/template.jsx').Header;
 var LoginContainer = require('./components/login.jsx').LoginContainer;
+var MessageContainer = require('./components/message.jsx').MessageContainer;
 
 var AppRouter = Backbone.Router.extend({
   routes: {
-    '': 'index'
+    '': 'index',
+    'messages/': 'messages'
   },
   index: function(){
     ReactDom.render(
-      React.createElement(LoginContainer),
+      React.createElement(LoginContainer, {router: this}),
+      document.getElementById('app')
+    );
+  },
+  messages: function(){
+    ReactDom.render(
+      React.createElement(MessageContainer),
       document.getElementById('app')
     );
   }

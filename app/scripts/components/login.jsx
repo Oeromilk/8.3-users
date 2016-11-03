@@ -1,6 +1,14 @@
 var React = require('react');
+var $ = require('jquery');
 
 var Header = require('./layouts/template.jsx').Header;
+
+$.ajaxSetup({
+  beforeSend: function(xhr){
+    xhr.setRequestHeader("X-Parse-Application-Id", "dalaran");
+    xhr.setRequestHeader("X-Parse-REST-API-Key", "stormwind");
+  }
+});
 
 var SignUpForm = React.createClass({
   getInitialState: function(){
@@ -17,13 +25,14 @@ var SignUpForm = React.createClass({
     var password = e.target.value;
     this.setState({password: password});
   },
-  handleSignUp: function(e, signUpInformation){
+  handleSignUp: function(e){
     e.preventDefault();
-    signUpInformation = {
+    var signUpInformation = {
       username: this.state.username,
       password: this.state.password
     };
-    console.log(signUpInformation);
+    this.props.handleSignUp(signUpInformation);
+    this.setState({username:'', password: ''});
   },
   render: function(){
     return (
@@ -66,7 +75,6 @@ var LoginForm = React.createClass({
       username: this.state.username,
       password: this.state.password
     };
-    console.log(loginInformation);
     this.props.handleLogIn(loginInformation);
     this.setState({username:'', password: ''});
   },
@@ -97,14 +105,34 @@ var LoginContainer = React.createClass({
     };
   },
   handleLogIn: function(loginInformation){
-    console.log(loginInformation);
     this.setState({username: loginInformation.username});
+    var username = loginInformation.username;
+    var password = loginInformation.password;
+    var self = this;
+    $.get('https://grabow.herokuapp.com/login?username=' + username + '&password=' + password).then(function(response){
+        console.log(response.username);
+        console.log(response.sessionToken);
+        localStorage.setItem('username', response.username);
+        localStorage.setItem('token', response.sessionToken);
+        if (response.sessionToken) {
+          self.props.router.navigate('messages/', {trigger: true});
+        };
+      });
+  },
+  handleSignUp: function(signUpInformation){
+    var data = {
+      'username': signUpInformation.username,
+      'password': signUpInformation.password
+    };
+    $.post('https://grabow.herokuapp.com/users', data).then(function(response){
+      console.log(response);
+    });
   },
   render: function(){
     return (
-      <Header username={this.state.username}>
-        <LoginForm handleLogIn={this.handleLogIn}/>
-        <SignUpForm />
+      <Header>
+        <LoginForm router={this.props.router} handleLogIn={this.handleLogIn}/>
+        <SignUpForm handleSignUp={this.handleSignUp}/>
       </Header>
     );
   }
